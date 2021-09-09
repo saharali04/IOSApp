@@ -50,11 +50,18 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="spw-Lv-PEI">
+                                <rect key="frame" x="106" y="121" width="203" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
+                        <outlet property="foodSelectionTxtField" destination="spw-Lv-PEI" id="KLS-xE-nlF"/>
                         <outlet property="restaurantLbl" destination="P8P-nL-Dhs" id="1Ct-xg-eEh"/>
                         <outlet property="tipTxt" destination="GZe-OA-upv" id="hTu-qs-pCT"/>
                         <outlet property="totalPriceLbl" destination="aq4-nh-Gzo" id="K1M-P9-uHi"/>
