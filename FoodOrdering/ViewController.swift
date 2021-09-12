@@ -14,9 +14,15 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     @IBOutlet weak var totalPriceLbl: UILabel!
     @IBOutlet weak var foodSelectionTxtField: UITextField!
     
-    let foodItems = ["Cheeseburger - $6.00","Fries $3.00","Chicken Tenders - $5.00","Milkshake - $3.00","Wings - $8.00","Pizza - $12.00"]
+    let foodItems = ["Cheeseburger - $6.00","Fries - $3.00","Queso - $5.00","Milkshake - $3.00","Wings - $8.00","Pizza - $12.00"]
+    
+    let food = ["Cheeseburger ": 6.00, "Fries ": 3.00, "Queso ": 5.00,"Milkshake ": 3.00,"Wings ": 8.00,"Pizza ": 12.00]
+    
+    var foodItemsToBuy = [String: Array<Double>]()
     
     var pickerView = UIPickerView()
+     
+    var totalPrice : Double = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,11 +51,38 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         foodSelectionTxtField.text = foodItems[row]
         foodSelectionTxtField.resignFirstResponder()
     }
+    
     @IBAction func buyItems(_ sender: Any) {
-        let tip = Double(tipTxt.text!)!
-        let totalPrice = tip + 15.00
+        totalPrice = 0.0
+        let tip = Double(tipTxt.text ?? "0.0")
+        for item in foodItemsToBuy {
+            totalPrice += item.value.first! * Double(item.value.last!)
+            print(totalPrice)
+        }
+        totalPrice += tip ?? 0.0
         totalPriceLbl.text = "$\(totalPrice)"
         
     }
+    
+    @IBAction func addToCart(_ sender: Any) {
+        if (foodSelectionTxtField.hasText) {
+            let dashIndex = (foodSelectionTxtField.text?.firstIndex(of: " "))!
+            let foodItem = String((foodSelectionTxtField.text?[...dashIndex])!)
+            for item in food {
+                if foodItem == item.key {
+                    if (foodItemsToBuy[item.key] == nil ) {
+                        foodItemsToBuy[item.key] = [item.value, 1]
+                    } else {
+                        foodItemsToBuy[item.key] = [item.value, (foodItemsToBuy[item.key]?.last!)! + 1]
+                    }
+                    
+                }
+            }
+            print(foodItemsToBuy)
+        } else {
+            print("false")
+        }
+    }
+    
 }
 
