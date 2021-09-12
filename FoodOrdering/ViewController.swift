@@ -13,6 +13,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     @IBOutlet weak var tipTxt: UITextField!
     @IBOutlet weak var totalPriceLbl: UILabel!
     @IBOutlet weak var foodSelectionTxtField: UITextField!
+    @IBOutlet var tableView: UITableView!
     
     let foodItems = ["Cheeseburger - $6.00","Fries - $3.00","Queso - $5.00","Milkshake - $3.00","Wings - $8.00","Pizza - $12.00"]
     
@@ -33,6 +34,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         foodSelectionTxtField.inputView = pickerView
         foodSelectionTxtField.textAlignment = .center
         foodSelectionTxtField.placeholder = "Select Food Item"
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -82,7 +85,32 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         } else {
             print("false")
         }
+        tableView.reloadData()
     }
     
+}
+
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("you tapped me!")
+    }
+}
+
+extension ViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return foodItemsToBuy.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let arrayOfFoodItems = Array(foodItemsToBuy.keys)
+        let arrayOfQuantities = Array(foodItemsToBuy.values)
+        cell.textLabel?.text = String(arrayOfFoodItems[indexPath.row]).padding(toLength: 25, withPad: "  ", startingAt: 0) +  String(arrayOfQuantities[indexPath.row].last ?? 1.0)
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
 }
 
