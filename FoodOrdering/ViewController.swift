@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
-class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
-
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, LoginButtonDelegate {
+    
     @IBOutlet weak var restaurantLbl: UILabel!
     @IBOutlet weak var tipTxt: UITextField!
     @IBOutlet weak var totalPriceLbl: UILabel!
@@ -36,6 +37,60 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         foodSelectionTxtField.placeholder = "Select Food Item"
         tableView.delegate = self
         tableView.dataSource = self
+        
+        if let token = AccessToken.current, !token.isExpired {
+                // User is logged in, do work such as go to next view controller.
+            let token = token.tokenString
+            
+            let request = FBSDKLoginKit.GraphRequest(graphPath: "me",
+                                                     parameters: ["fields": "email, name"],
+                                                     tokenString: token,
+                                                     version: nil,
+                                                     httpMethod: .get)
+            request.start(completionHandler: { connection, result, error in
+                print("\(result)")
+                guard let json = result as? NSDictionary else { return }
+                if let name = json["name"] as? String {
+                    self.restaurantLbl.text = "Hi, " + name
+                } else {
+                    self.restaurantLbl.text = "Hi!"
+                }
+            })
+            
+        } else {
+            let loginButton = FBLoginButton()
+            let newCenter = CGPoint(x: 205,y: 680)
+            loginButton.center = newCenter
+            loginButton.delegate = self
+            loginButton.permissions = ["public_profile", "email"]
+            view.addSubview(loginButton)
+        }
+    }
+    
+    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        let token = result?.token?.tokenString
+        
+        let request = FBSDKLoginKit.GraphRequest(graphPath: "me",
+                                                 parameters: ["fields": "email, name"],
+                                                 tokenString: token,
+                                                 version: nil,
+                                                 httpMethod: .get)
+        request.start(completionHandler: { connection, result, error in
+            print("\(result)")
+            guard let json = result as? NSDictionary else { return }
+            if let name = json["name"] as? String {
+                self.restaurantLbl.text = "Hi, " + name
+            } else {
+                self.restaurantLbl.text = "Hi"
+            }
+        })
+        
+        
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+        print("hi")
+        restaurantLbl.text = "GT Dining"
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
