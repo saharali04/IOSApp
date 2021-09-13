@@ -5,7 +5,7 @@ How to run IOSApp
 2b. If you have Windows, it is unlikely that you will be able to install XCode for free. The link below shows how to use XCode on Windows but it is not free. 
   -https://learnappmaking.com/xcode-for-windows-how-to/
 3. Once you have XCode installed, open the application. 
-4. Then, click on "Open an existing project." 
+4. Then, click on "Open a project or file." 
 5. Select the folder from the location you cloned the repository to. 
 6. Once the app opens, you should see a play button close to the top left corner. Press this button. 
-7. You should now see the app running!
+7. You should now see the app running! It may take some time for it to start up.
