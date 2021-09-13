@@ -25,6 +25,50 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
      
     var totalPrice : Double = 0.0
     
+    var tip : Double = 0.0
+    
+    func apiCall() {
+        
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        let result = formatter.string(from: date)
+        
+        guard let url = URL(string: "http://localhost:3000/orders") else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        // method, body, headers
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body : [String: AnyHashable] = [
+            "date": result,
+            "food": foodItemsToBuy.description,
+            "customerName": "GT student",
+            "price": totalPrice,
+            "tip": tip
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+        // Make the request
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data = data, error == nil else {
+                return
+            }
+            
+            do {
+                let response = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                print("SUCCESS:  \(response)")
+            }
+            catch {
+                print(error)
+            }
+        
+        
+    }
+    task.resume()
+}
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         totalPriceLbl.text = ""
@@ -57,13 +101,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     @IBAction func buyItems(_ sender: Any) {
         totalPrice = 0.0
-        let tip = Double(tipTxt.text ?? "0.0")
+        tip = Double(tipTxt.text ?? "0.0")!
         for item in foodItemsToBuy {
             totalPrice += item.value.first! * Double(item.value.last!)
             print(totalPrice)
         }
         totalPrice += tip ?? 0.0
         totalPriceLbl.text = "$\(totalPrice)"
+        apiCall()
         
     }
     
