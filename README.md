@@ -1,4 +1,4 @@
-How to run IOSApp
+**How to run IOSApp**
 1. First, clone this repository to a location that you can come back to in step 5.
 2a. Follow the directions on this website to install XCode if you have a Mac
   -https://www.freecodecamp.org/news/how-to-download-and-install-xcode/
